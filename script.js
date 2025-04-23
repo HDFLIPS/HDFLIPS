@@ -8,14 +8,19 @@ function formatNumber(n) {
 function showTab(tabName) {
     document.getElementById("recipeTab").classList.add("hidden");
     document.getElementById("priceTab").classList.add("hidden");
+    document.getElementById("bazaarTab").classList.add("hidden");
     document.querySelectorAll(".tab-button").forEach(btn => btn.classList.remove("active"));
 
     if (tabName === "recipe") {
         document.getElementById("recipeTab").classList.remove("hidden");
         document.querySelector(".tab-button:nth-child(1)").classList.add("active");
-    } else {
+    } else if (tabName === "price") {
         document.getElementById("priceTab").classList.remove("hidden");
         document.querySelector(".tab-button:nth-child(2)").classList.add("active");
+    } else if (tabName === "bazaar") {
+        document.getElementById("bazaarTab").classList.remove("hidden");
+        document.querySelector(".tab-button:nth-child(3)").classList.add("active");
+        loadBazaarFlips();
     }
 }
 
@@ -63,8 +68,8 @@ async function fetchRecipe() {
 
     try {
         const response = await fetch(apiUrl);
-
         let itemCounts = {};
+
         if (response.ok) {
             const data = await response.json();
 
@@ -156,11 +161,31 @@ async function fetchTopBazaarFlips() {
         if (data.error) {
             throw new Error('Error fetching Bazaar flips');
         }
-        return data.flips.slice(0, 5); // Return the top 5 flips
+        return data.flips.slice(0, 5);
     } catch (error) {
         console.error('Error fetching Bazaar flips:', error);
         return [];
     }
+}
+
+async function loadBazaarFlips() {
+    const container = document.getElementById("bazaarFlipContainer");
+    container.innerHTML = "Loading top Bazaar flips...";
+
+    const flips = await fetchTopBazaarFlips();
+
+    container.innerHTML = "";
+    flips.forEach(flip => {
+        const flipDiv = document.createElement("div");
+        flipDiv.className = "bazaar-flip";
+        flipDiv.innerHTML = `
+            <h3>${flip.itemName}</h3>
+            <p><strong>Buy Price:</strong> ${formatNumber(flip.buyPrice)}</p>
+            <p><strong>Sell Price:</strong> ${formatNumber(flip.sellPrice)}</p>
+            <p><strong>Profit:</strong> ${formatNumber(flip.profit)}</p>
+        `;
+        container.appendChild(flipDiv);
+    });
 }
 
 async function calculatePrice() {
@@ -188,4 +213,13 @@ async function calculatePrice() {
         `${priceDetails}\nTotal Crafting Cost: ${formatNumber(totalCraftingCost)}\n\n` +
         `Lowest BIN (if any): ${formatNumber(originalPrice)}`;
     priceOutputElement.style.display = "block";
+}
+
+// Toggle dropdown for history
+function toggleHistory() {
+    const historyList = document.getElementById("historyList");
+    historyList.classList.toggle("collapsed");
+
+    const h3 = document.querySelector("#historyPanel h3");
+    h3.innerHTML = historyList.classList.contains("collapsed") ? "History ⏷" : "History ⏶";
 }
