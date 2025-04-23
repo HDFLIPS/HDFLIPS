@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+
 <div class="container centered" id="searchContainer">
     <h1>HDFLIPS</h1>
     <input type="text" id="itemInput" placeholder="Search an item...">
@@ -34,9 +35,10 @@
 </div>
 
 <div class="history-panel" id="historyPanel">
-    <h3>History</h3>
-    <ul id="historyList"></ul>
+    <h3 onclick="toggleHistory()">History ⏷</h3>
+    <ul id="historyList" class="collapsed"></ul>
 </div>
+
 <script src="script.js"></script>
 </body>
 </html>
