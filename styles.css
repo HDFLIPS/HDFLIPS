@@ -112,6 +112,8 @@ button:hover {
     margin: 0 0 10px 0;
     font-size: 18px;
     color: #ffee55;
+    cursor: pointer;
+    user-select: none;
 }
 
 #historyList {
@@ -120,6 +122,7 @@ button:hover {
     margin: 0;
     max-height: 300px;
     overflow-y: auto;
+    transition: all 0.3s ease;
 }
 
 #historyList li {
@@ -133,6 +136,11 @@ button:hover {
 
 #historyList li:hover {
     background-color: #444;
+}
+
+/* Collapse toggle */
+#historyList.collapsed {
+    display: none;
 }
 
 #bazaarFlipContainer {
